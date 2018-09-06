@@ -101,38 +101,74 @@ XMMATRIX randomizeMatrix() {// this returns a random matrix between 0 and 99
 }
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 float d = 0;
-float det(int n, float mat[10][10])
+
+int det(int n, float mat[10][10])
 {
-	int c, subi, i, j, subj;
-	float submat[10][10];
-	if (n == 2)
+	XMFLOAT4X4 my_2_4X4;
+	int D = 0; // Initialize result
+
+	//  Base case : if matrix contains single element
+	if (n == 1)
+		return mat[0][0];
+
+	int temp[10][10]; // To store cofactors
+
+	int sign = 1;  // To store sign multiplier
+
+	 // Iterate for each element of first row
+	for (int f = 0; f < n; f++)
 	{
-		return((mat[0][0] * mat[1][1]) - (mat[1][0] * mat[0][1]));
+		// Getting Cofactor of mat[0][f]
+		getCofactor(my_2_4X4, temp, i, j, 4);
+		D += sign * mat[0][f] * det(temp, n - 1);
+
+		// terms are to be added with alternate sign
+		sign = -sign;
 	}
-	else
-	{
-		for (c = 0; c < n; c++)
-		{
-			subi = 0;
-			for (i = 1; i < n; i++)
-			{
-				subj = 0;
-				for (j = 0; j < n; j++)
-				{
-					if (j == c)
-					{
-						continue;
-					}
-					submat[subi][subj] = mat[i][j];
-					subj++;
-				}
-				subi++;
-			}
-			d = d + (pow(-1, c) * mat[0][c] * det(n - 1, submat));
-		}
-	}
-	return d;
+
+	return D;
 }
+
+
+
+
+//float det(int n, float mat[10][10])
+//{
+//	int sign = 1;
+//	int c, subi, i, j, subj;
+//	float submat[10][10];
+//	if (n == 2)
+//	{
+//		return((mat[0][0] * mat[1][1]) - (mat[1][0] * mat[0][1]));
+//	}
+//	else
+//	{
+//		for (c = 0; c < n; c++)
+//		{
+//			subi = 0;
+//			for (i = 1; i < n; i++)
+//			{
+//
+//				subj = 0;
+//				for (j = 0; j < n; j++)
+//				{
+//					if (j == c)
+//					{
+//						continue;
+//					}
+//					submat[subi][subj] = mat[i][j];
+//					cout << submat[subi][subj] << endl;
+//					subj++;
+//				}
+//				subi++;
+//			}
+//			//d = d + (pow(-1, c) * mat[0][c] * det(n - 1, submat));
+//			d += sign * mat[0][c] * det(n-1, submat);
+//			sign = -sign;
+//		}
+//	}
+//	return d;
+//}
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 int main() {
 	srand(time(NULL));
